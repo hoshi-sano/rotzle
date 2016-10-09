@@ -1,6 +1,6 @@
 module Rotzle
   class Board
-    attr_reader :render_target, :x, :y
+    attr_reader :render_target, :x, :y, :drop_cursor
 
     def initialize(x_size, y_size)
       @x = 100
@@ -22,12 +22,14 @@ module Rotzle
       @next_ary = @horizontal_ary
       swith_current_ary
 
+      panel_classes = [RedPanel, GreenPanel, BluePanel, YellowPanel]
       # ランダム生成
       100.times do
-        klass = [RedPanel, GreenPanel, BluePanel, YellowPanel].sample
-        self[rand(h_cell_num), rand(v_cell_num)].panel = klass.new
+        self[rand(h_cell_num), rand(v_cell_num)].panel = panel_classes.sample.new
       end
       fall
+
+      @drop_cursor = DropCursor.new(panel_classes, self)
     end
 
     def swith_current_ary
@@ -158,6 +160,7 @@ module Rotzle
     def draw
       bg_image.draw
       all_cells(&:draw)
+      @drop_cursor.draw
       Window.draw_ex(@x, @y, @render_target, angle: current_angle)
     end
 

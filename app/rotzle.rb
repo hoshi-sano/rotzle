@@ -4,6 +4,7 @@ module Rotzle
   require 'rotzle/panel'
   require 'rotzle/board'
   # パズルシーン関連
+  require 'rotzle/drop_cursor'
   require 'rotzle/puzzle_manager'
   require 'rotzle/puzzle_scene'
 

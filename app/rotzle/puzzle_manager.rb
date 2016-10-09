@@ -44,14 +44,24 @@ module Rotzle
         @update_method = method(:wait_falling)
       end
 
+      def wait_dropping
+        @board.update
+        return if @board.animating?
+        # TODO: switch clockwise/counterclockwise
+        @board.rotate_clockwise
+        @update_method = method(:wait_rotating)
+      end
+
       def check_keys
         return if @board.animating?
         if Input.key_push?(K_LEFT)
-          @board.rotate_clockwise
-          @update_method = method(:wait_rotating)
+          @board.drop_cursor.move_left
         elsif Input.key_push?(K_RIGHT)
-          @board.rotate_counterclockwise
-          @update_method = method(:wait_rotating)
+          @board.drop_cursor.move_right
+        elsif Input.key_push?(K_Z)
+          @board.drop_cursor.drop
+          @board.fall
+          @update_method = method(:wait_dropping)
         end
       end
     end
