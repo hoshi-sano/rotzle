@@ -1,7 +1,7 @@
 module Rotzle
   # 共通
   require 'rotzle/scene'
-  require 'rotzle/ball'
+  require 'rotzle/panel'
   require 'rotzle/board'
   # パズルシーン関連
   require 'rotzle/puzzle_manager'

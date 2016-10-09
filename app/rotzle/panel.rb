@@ -1,4 +1,4 @@
-class Ball < Sprite
+class Panel < Sprite
   FALL_SPEED = 10
 
   attr_reader :cell
@@ -15,8 +15,8 @@ class Ball < Sprite
   end
 
   def fall_to(c)
-    @cell.ball = nil
-    c.instance_variable_set(:@ball, self)
+    @cell.panel = nil
+    c.instance_variable_set(:@panel, self)
     @cell = c
     @next_y = 20 * c.y
   end
@@ -37,24 +37,24 @@ class Ball < Sprite
         @cell.board.vanishing!
       else
         @linked_vanish = false
-        @cell.ball = nil
+        @cell.panel = nil
       end
     end
   end
 end
 
-class RedBall < Ball
+class RedPanel < Panel
   IMAGE = Image.new(20, 20, [230, 40, 30])
 end
 
-class GreenBall < Ball
+class GreenPanel < Panel
   IMAGE = Image.new(20, 20, [30, 200, 80])
 end
 
-class BlueBall < Ball
+class BluePanel < Panel
   IMAGE = Image.new(20, 20, [30, 100, 230])
 end
 
-class YellowBall < Ball
+class YellowPanel < Panel
   IMAGE = Image.new(20, 20, [255, 200, 0])
 end

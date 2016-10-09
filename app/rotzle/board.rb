@@ -23,8 +23,8 @@ class Board
 
     # ランダム生成
     100.times do
-      klass = [RedBall, GreenBall, BlueBall, YellowBall].sample
-      self[rand(h_cell_num), rand(v_cell_num)].ball = klass.new
+      klass = [RedPanel, GreenPanel, BluePanel, YellowPanel].sample
+      self[rand(h_cell_num), rand(v_cell_num)].panel = klass.new
     end
     fall
   end
@@ -69,7 +69,7 @@ class Board
     @rot_unit = 10
     (0...h_cell_num).each do |i|
       (0...v_cell_num).to_a.reverse.each do |j|
-        @next_ary[i][v_cell_num - 1 - j].ball =  self[i, j].ball
+        @next_ary[i][v_cell_num - 1 - j].panel =  self[i, j].panel
       end
     end
   end
@@ -82,7 +82,7 @@ class Board
     @rot_unit = -10
     (0...h_cell_num).to_a.reverse.each do |i|
       (0...v_cell_num).each do |j|
-        @next_ary[h_cell_num - 1 - i][j].ball =  self[i, j].ball
+        @next_ary[h_cell_num - 1 - i][j].panel =  self[i, j].panel
       end
     end
   end
@@ -143,7 +143,7 @@ class Board
   end
 
   def finish_rotate
-    all_cells { |cell| cell.ball = nil }
+    all_cells { |cell| cell.panel = nil }
     @current_angle = 0
     @rot_unit = nil
     @next_angle = nil
@@ -162,7 +162,7 @@ class Board
 
   def fall_point_cell(col_number, row_number)
     fall_row = @current[row_number..-1].reverse
-               .find { |ary| ary[col_number].ball.nil? }
+               .find { |ary| ary[col_number].panel.nil? }
     return nil unless fall_row
     fall_row[col_number]
   end
@@ -176,7 +176,7 @@ class Board
   end
 
   class Cell
-    attr_reader :x, :y, :ball, :board
+    attr_reader :x, :y, :panel, :board
 
     def initialize(x, y, board)
       @x = x
@@ -185,21 +185,21 @@ class Board
       @marked = false
     end
 
-    def ball=(b)
-      @ball = b
+    def panel=(b)
+      @panel = b
       return unless b
-      @ball.cell = self
-      @ball.target = @board.render_target
+      @panel.cell = self
+      @panel.target = @board.render_target
     end
 
     def update
-      return unless @ball
-      @ball.update
+      return unless @panel
+      @panel.update
     end
 
     def draw
-      return unless @ball
-      @ball.draw
+      return unless @panel
+      @panel.draw
     end
 
     def unmark!
@@ -217,11 +217,11 @@ class Board
 
     def mark!
       @marked = true
-      @ball.linked_vanish!
+      @panel.linked_vanish!
     end
 
     def check
-      return false if !@ball
+      return false if !@panel
       return true if @marked
       same = recursive_check
       if same.size >= 5
@@ -233,7 +233,7 @@ class Board
     end
 
     def recursive_check
-      same = check_targets.compact.select { |c| !c.checked? && c.ball.is_a?(@ball.class) }
+      same = check_targets.compact.select { |c| !c.checked? && c.panel.is_a?(@panel.class) }
       check!
       if same.any?
         same << self
@@ -252,15 +252,15 @@ class Board
     end
 
     def fall
-      return unless @ball
-      prev_cell = @ball.cell
+      return unless @panel
+      prev_cell = @panel.cell
       next_cell = @board.fall_point_cell(prev_cell.x, prev_cell.y)
       return unless next_cell
-      @ball.fall_to(next_cell)
+      @panel.fall_to(next_cell)
     end
 
     def inspect
-      @ball ? 'o' : ' '
+      @panel ? 'o' : ' '
     end
   end
 end
