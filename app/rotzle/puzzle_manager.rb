@@ -3,6 +3,7 @@ module Rotzle
     module ModuleMethods
       def init
         @board = Board.new(15, 10)
+        @next_panel_window = NextPanelWindow.new(@board.drop_cursor)
         @update_method = method(:only_update)
       end
 
@@ -12,6 +13,7 @@ module Rotzle
 
       def draw_components
         @board.draw
+        @next_panel_window.draw
       end
 
       def only_update
