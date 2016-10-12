@@ -150,7 +150,13 @@ module Rotzle
       @current_angle = 0
       @rot_unit = nil
       @next_angle = nil
+      adjust_drop_cursor_position
       swith_current_ary
+    end
+
+    def adjust_drop_cursor_position
+      return unless @drop_cursor.x > @next_ary.first.size - 1
+      @drop_cursor.move_to(@next_ary.first.size - 1)
     end
 
     def current_angle

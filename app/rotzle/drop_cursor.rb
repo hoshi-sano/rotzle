@@ -1,6 +1,6 @@
 module Rotzle
   class DropCursor
-    attr_reader :next
+    attr_reader :x, :next
 
     def initialize(panels, board)
       @panels = panels
@@ -14,16 +14,19 @@ module Rotzle
       @next.target = @board.render_target
     end
 
+    def move_to(pos)
+      @x = pos
+      @current.cell = @board[@x, 0]
+    end
+
     def move_left
       return if @x== 0
-      @x -= 1
-      @current.cell = @board[@x, 0]
+      move_to(@x - 1)
     end
 
     def move_right
       return if @x == @board.h_cell_num - 1
-      @x += 1
-      @current.cell = @board[@x, 0]
+      move_to(@x + 1)
     end
 
     def drop
