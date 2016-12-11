@@ -1,6 +1,6 @@
 module Rotzle
   class DropCursor
-    attr_reader :x, :next
+    attr_reader :x, :next, :panels
 
     def initialize(panels, board)
       @panels = panels

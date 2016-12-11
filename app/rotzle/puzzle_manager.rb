@@ -5,6 +5,8 @@ module Rotzle
         @board = Board.new(15, 10)
         @next_panel_window = NextPanelWindow.new(@board.drop_cursor)
         @update_method = method(:only_update)
+        @default_randam_fall_interval = 2
+        @randam_fall_interval = @default_randam_fall_interval
       end
 
       def update_components
@@ -28,7 +30,15 @@ module Rotzle
         if vanishing_cells.any?
           @update_method = method(:wait_vanishing)
         else
-          @update_method = method(:only_update)
+          if @randam_fall_interval <= 0
+            @randam_fall_interval = @default_randam_fall_interval
+            @board.garbage_panel_random_fall
+            @board.fall
+            @update_method = method(:wait_falling)
+          else
+            @randam_fall_interval -= 1
+            @update_method = method(:only_update)
+          end
         end
       end
 

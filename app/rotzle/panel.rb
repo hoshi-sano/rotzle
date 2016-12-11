@@ -8,6 +8,10 @@ module Rotzle
       super(0, 0, self.class.const_get(:IMAGE))
     end
 
+    def garbage?
+      false
+    end
+
     def cell=(c)
       @cell = c
       self.x = 20 * c.x
@@ -37,10 +41,14 @@ module Rotzle
         if self.alpha > 0
           @cell.board.vanishing!
         else
-          @linked_vanish = false
-          @cell.panel = nil
+          finish_linked_vanish!
         end
       end
+    end
+
+    def finish_linked_vanish!
+      @linked_vanish = false
+      @cell.panel = nil
     end
   end
 
@@ -58,5 +66,18 @@ module Rotzle
 
   class YellowPanel < Panel
     IMAGE = Image.new(20, 20, [255, 200, 0])
+  end
+
+  class GarbagePanel < Panel
+    IMAGE = Image.new(20, 20, [150, 150, 150])
+
+    def garbage?
+      true
+    end
+
+    def finish_linked_vanish!
+      @linked_vanish = false
+      @cell.panel = @cell.board.drop_cursor.panels.sample.new
+    end
   end
 end

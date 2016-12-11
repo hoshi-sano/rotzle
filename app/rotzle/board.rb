@@ -185,6 +185,14 @@ module Rotzle
       all_cells(&:unmark!)
     end
 
+    def garbage_panel_random_fall
+      fall_row = @current[0]
+      num = rand(fall_row.size)
+      fall_row.sample(num).each do |cell|
+        cell.panel = GarbagePanel.new
+      end
+    end
+
     class Cell
       attr_reader :x, :y, :panel, :board
 
@@ -228,13 +236,16 @@ module Rotzle
       def mark!
         @marked = true
         @panel.linked_vanish!
+        check_targets.compact.each do |c|
+          c.panel.linked_vanish! if c.panel && c.panel.garbage?
+        end
       end
 
       def check
-        return false if !@panel
+        return false if !@panel || @panel.garbage?
         return true if @marked
         same = recursive_check
-        if same.size >= 5
+        if same.size >= 3
           same.each(&:mark!)
           true
         else
